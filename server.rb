@@ -7,7 +7,7 @@ require "mini_magick"
 get '/width/:value/*/?' do |value, url|
   image = open url
   resize image, value
-  image.write "width.jpg"
+  write image, "width" + find_file_name(url)
 end
 
 # Resize and crop an image at the given url.
@@ -17,17 +17,26 @@ get '/crop/:dimensions/*/?' do |dimensions, url|
   image = open url
   resize image, dimensions + '^'
   crop image, dimensions
-  image.write "crop.jpg"
+  write image, "crop" + find_file_name(url)
+end
+
+
+# Find the name of the file for a url.
+def find_file_name(url)
+  file_name = url.split('/').last
 end
 
 
 # Opens a specific image file either on the local file system or at a URI.
 def open(url)
-  file_name = url.split('/').last
+  file_name = find_file_name(url)
+
   if File.exists?(file_name)
     open_from_file file_name
   else
-    open_from_uri url
+    image = open_from_uri url
+    write image, file_name
+    image
   end
 end
 
@@ -37,6 +46,12 @@ end
 
 def open_from_file(path)
   MiniMagick::Image.open path
+end
+
+
+# Writes the temporary file out to either a file location.
+def write(image, path)
+  image.write path
 end
 
 
