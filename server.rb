@@ -5,7 +5,7 @@ require "mini_magick"
 # The path looks like:
 #     http://imageServer.com/width/X/urlImg
 get '/width/:value/*/?' do |value, urlImg|
-  image = MiniMagick::Image.open "http://#{urlImg}"
+  image = open urlImg
   resize image, value
   image.write "width.jpg"
 end
@@ -14,10 +14,29 @@ end
 # The path looks like:
 #     http://imageServer.com/crop/XxY/urlImg
 get '/crop/:dimensions/*/?' do |dimensions, urlImg|
-  image = MiniMagick::Image.open "http://#{urlImg}"
+  image = open urlImg
   resize image, dimensions + '^'
   crop image, dimensions
   image.write "crop.jpg"
+end
+
+
+# Opens a specific image file either on the local file system or at a URI.
+def open(urlImg)
+  file_name = urlImg.split('/').last
+  if File.exists?(file_name)
+    open_from_file file_name
+  else
+    open_from_uri urlImg
+  end
+end
+
+def open_from_uri(url)
+  MiniMagick::Image.open "http://#{url}"
+end
+
+def open_from_file(path)
+  MiniMagick::Image.open path
 end
 
 
