@@ -3,18 +3,18 @@ require "mini_magick"
 
 # Resize an image at the given url.
 # The path looks like:
-#     http://imageServer.com/width/X/urlImg
-get '/width/:value/*/?' do |value, urlImg|
-  image = open urlImg
+#     http://imageServer.com/width/X/url
+get '/width/:value/*/?' do |value, url|
+  image = open url
   resize image, value
   image.write "width.jpg"
 end
 
 # Resize and crop an image at the given url.
 # The path looks like:
-#     http://imageServer.com/crop/XxY/urlImg
-get '/crop/:dimensions/*/?' do |dimensions, urlImg|
-  image = open urlImg
+#     http://imageServer.com/crop/XxY/url
+get '/crop/:dimensions/*/?' do |dimensions, url|
+  image = open url
   resize image, dimensions + '^'
   crop image, dimensions
   image.write "crop.jpg"
@@ -22,12 +22,12 @@ end
 
 
 # Opens a specific image file either on the local file system or at a URI.
-def open(urlImg)
-  file_name = urlImg.split('/').last
+def open(url)
+  file_name = url.split('/').last
   if File.exists?(file_name)
     open_from_file file_name
   else
-    open_from_uri urlImg
+    open_from_uri url
   end
 end
 
