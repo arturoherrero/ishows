@@ -1,64 +1,52 @@
 require 'sinatra'
 require "mini_magick"
 
-# Resize an image at the given url.
+# Resize an image at the given URL.
 # The path looks like:
 #     http://imageServer.com/width/X/url
 get '/width/:value/*/?' do |value, url|
-  image = open url
-  resize image, value
-  write image, "width" + find_file_name(url)
+  filename = create_filename(value, url)
+
+  unless File.exists?(filename)
+    image = open url
+    resize image, value
+    write image, filename
+  end
+
+  send filename
 end
 
-# Resize and crop an image at the given url.
+# Resize and crop an image at the given URL.
 # The path looks like:
 #     http://imageServer.com/crop/XxY/url
 get '/crop/:dimensions/*/?' do |dimensions, url|
-  image = open url
-  resize image, dimensions + '^'
-  crop image, dimensions
-  write image, "crop" + find_file_name(url)
-end
+  filename = create_filename(dimensions, url)
 
-
-# Find the name of the file for a url.
-def find_file_name(url)
-  file_name = url.split('/').last
-end
-
-
-# Opens a specific image file either on the local file system or at a URI.
-def open(url)
-  file_name = find_file_name(url)
-
-  if File.exists?(file_name)
-    open_from_file file_name
-  else
-    image = open_from_uri url
-    write image, file_name
-    image
+  unless File.exists?(filename)
+    image = open url
+    resize image, dimensions + '^'
+    crop image, dimensions
+    write image, filename
   end
+
+  send filename
 end
 
-def open_from_uri(url)
+
+# Create the file name from a request.
+def create_filename(dimensions, url)
+  "#{dimensions}-" + find_filename(url)
+end
+
+# Find the file name from an URL.
+def find_filename(url)
+  url.split('/').last
+end
+
+# Opens a specific image file from an URI.
+def open(url)
   MiniMagick::Image.open "http://#{url}"
 end
-
-def open_from_file(path)
-  MiniMagick::Image.open path
-end
-
-
-# Writes the temporary file out to either a file location.
-def write(image, path)
-  image.write path
-end
-
-
-# MiniMagick gives you access to all the commandline options ImageMagick has.
-# http://www.imagemagick.org/script/command-line-options.php#resize
-# http://www.imagemagick.org/script/command-line-options.php#crop
-# http://www.imagemagick.org/script/command-line-processing.php#geometry
 
 # Resize an image.
 def resize(image, dimensions)
@@ -69,4 +57,16 @@ end
 # WORKAROUND: http://stackoverflow.com/q/8418973/462015
 def crop(image, dimensions)
   image.crop dimensions + "+0+0"
+end
+
+# Writes the temporary file out to either a file location.
+def write(image, path)
+  image.write path
+end
+
+# Sends the file by streaming it 8192 bytes at a time.
+def send(filename)
+  send_file filename,
+    :type => 'image/jpeg',
+    :disposition => 'inline'
 end
