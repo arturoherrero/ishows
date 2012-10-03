@@ -34,9 +34,11 @@ get '/crop/:dimensions/*/?' do |dimensions, url|
 end
 
 
+IMAGES_PATH = 'images/'
+
 # Create the file name from a request.
 def create_filename(dimensions, url)
-  "#{dimensions}-" + find_filename(url)
+  IMAGES_PATH + "#{dimensions}-" + find_filename(url)
 end
 
 # Find the file name from an URL.
