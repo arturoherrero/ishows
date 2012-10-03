@@ -1,5 +1,6 @@
+require 'rubygems'
 require 'sinatra'
-require "mini_magick"
+require 'mini_magick'
 
 # Resize an image at the given URL.
 # The path looks like:
@@ -13,7 +14,7 @@ get '/width/:value/*/?' do |value, url|
     write image, filename
   end
 
-  send filename
+  sendfile filename
 end
 
 # Resize and crop an image at the given URL.
@@ -29,7 +30,7 @@ get '/crop/:dimensions/*/?' do |dimensions, url|
     write image, filename
   end
 
-  send filename
+  sendfile filename
 end
 
 
@@ -65,7 +66,7 @@ def write(image, path)
 end
 
 # Sends the file by streaming it 8192 bytes at a time.
-def send(filename)
+def sendfile(filename)
   send_file filename,
     :type => 'image/jpeg',
     :disposition => 'inline'
