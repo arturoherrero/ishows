@@ -59,7 +59,10 @@ end
 # Cut out one or more rectangular regions of the image.
 # WORKAROUND: http://stackoverflow.com/q/8418973/462015
 def crop(image, dimensions)
-  image.crop dimensions + "+0+0"
+  image.combine_options do |c|
+    c.gravity "center"
+    c.crop dimensions + "+0+0"
+  end
 end
 
 # Writes the temporary file out to either a file location.
