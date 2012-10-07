@@ -2,6 +2,9 @@ require 'rubygems'
 require 'sinatra'
 require 'mini_magick'
 
+IMAGES_PATH = 'images/'
+
+
 # Resize an image at the given URL.
 # The path looks like:
 #     http://imageServer.com/width/X/url
@@ -33,8 +36,12 @@ get '/crop/:dimensions/*/?' do |dimensions, url|
   sendfile filename
 end
 
+# Delete all downloaded image files.
+get '/clear' do
+  FileUtils.rm_rf("#{IMAGES_PATH}/.")
+  'Deleted all local images cached'
+end
 
-IMAGES_PATH = 'images/'
 
 # Create the file name from a request.
 def create_filename(dimensions, url)
