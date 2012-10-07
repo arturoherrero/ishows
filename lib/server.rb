@@ -47,8 +47,10 @@ def find_filename(url)
 end
 
 # Opens a specific image file from an URI.
+# WORKAROUND: Sinatra match the route parameter with only one slash http:/
 def open(url)
-  MiniMagick::Image.open "http://#{url}"
+  url['http:/'] = 'http://'
+  MiniMagick::Image.open url
 end
 
 # Resize an image.
