@@ -53,6 +53,7 @@ def find_filename(url)
   url.split('/').last
 end
 
+
 # Opens a specific image file from an URI.
 # WORKAROUND: Sinatra match the route parameter with only one slash http:/
 def open(url)
@@ -75,6 +76,7 @@ end
 def write(image, path)
   image.write path
 end
+
 
 # Sends the file by streaming it 8192 bytes at a time.
 def sendfile(filename)
