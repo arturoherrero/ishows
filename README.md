@@ -2,6 +2,10 @@
 
 ishows is a [Sinatra] application to serve images with a determinate size. ishows use [MiniMagick] library to convert, edit or compose bitmap images.
 
+## instalation
+
+  $ bundle install
+  $ brew install imagemagick
 
 ## usage
 
