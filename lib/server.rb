@@ -4,7 +4,6 @@ require "mini_magick"
 IMAGES_PATH = "images/"
 
 class Server < Sinatra::Base
-
   # Resize an image at the given URL.
   # http://server.com/width/X/url
   get "/width/:value/*/?" do |value, url|
@@ -47,7 +46,7 @@ class Server < Sinatra::Base
   # WORKAROUND: Sinatra match the route parameter with only one slash http:/
   def open(url)
     url["http:/"] = "http://"
-    MiniMagick::Image.open(url)
+    minimagick.open(url)
   end
 
   def resize(image, dimensions)
@@ -69,5 +68,9 @@ class Server < Sinatra::Base
       :type => "image/jpeg",
       :disposition => "inline"
     )
+  end
+
+  def minimagick
+    MiniMagick::Image
   end
 end
