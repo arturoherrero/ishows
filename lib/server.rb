@@ -8,33 +8,33 @@ class Server < Sinatra::Base
   # Resize an image at the given URL.
   # http://server.com/width/X/url
   get "/width/:value/*/?" do |value, url|
-    filename = create_filename(value, url)
-
-    unless File.exists?(filename)
-      image = open(url)
+    process_image(value, url) { |image|
       resize(image, value)
-      write(image, filename)
-    end
-
-    sendfile(filename)
+    }
   end
 
   # Resize and crop an image at the given URL.
   # http://server.com/crop/XxY/url
   get "/crop/:dimensions/*/?" do |dimensions, url|
+    process_image(dimensions, url) { |image|
+      resize(image, dimensions + "^")
+      crop(image, dimensions)
+    }
+  end
+
+  private
+
+  def process_image(dimensions, url, &process)
     filename = create_filename(dimensions, url)
 
     unless File.exists?(filename)
       image = open(url)
-      resize(image, dimensions + "^")
-      crop(image, dimensions)
+      process.call(image)
       write(image, filename)
     end
 
     sendfile(filename)
   end
-
-  private
 
   def create_filename(dimensions, url)
     IMAGES_PATH + "#{dimensions}-" + find_filename(url)
