@@ -36,11 +36,11 @@ class Server < Sinatra::Base
   end
 
   def create_filename(dimensions, url)
-    IMAGES_PATH + "#{dimensions}-" + find_filename(url)
+    "#{IMAGES_PATH}#{dimensions}-#{key(url)}"
   end
 
-  def find_filename(url)
-    url.split("/").last
+  def key(url)
+    Digest::SHA1.hexdigest(url)
   end
 
   # WORKAROUND: Sinatra match the route parameter with only one slash http:/
