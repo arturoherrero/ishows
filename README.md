@@ -4,8 +4,8 @@ ishows is a [Sinatra] application to serve images with a determinate size. ishow
 
 ## instalation
 
-  $ bundle install
-  $ brew install imagemagick
+    $ bundle install
+    $ brew install imagemagick
 
 ## usage
 
