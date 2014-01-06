@@ -1,24 +1,25 @@
-# ishows
+# iShows
 
-ishows is a [Sinatra] application to serve images with a determinate size. ishows use [MiniMagick] library to convert, edit or compose bitmap images.
+iShows is a [Sinatra] application to serve images with a determinate size. iShows use [MiniMagick] library to convert, edit or compose bitmap images.
 
-## instalation
+## Instalation
 
-    $ bundle install
-    $ brew install imagemagick
+    $ bundle
+    $ apt-get install imagemagick (Ubuntu)
+    $ brew install imagemagick (OSX)
 
-## usage
+## Usage
 
 Resize an image
 
-    http://imageServer.com/width/305/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg'
+    http://server.com/width/305/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg'
 
 Crop an image
 
-    http://imageServer.com/width/305x105/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg'
+    http://server.com/crop/305x105/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg'
 
 
-## deployment
+## Deployment
 
 Using [Phusion Passenger] application server for Apache to deploy the Sinatra app.
 
