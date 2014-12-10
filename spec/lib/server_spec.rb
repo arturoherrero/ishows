@@ -9,14 +9,9 @@ describe Server do
   let(:value)      { "305" }
   let(:dimensions) { "305x105" }
   let(:image)      { MiniMagick::Image.open(path) }
+  subject(:app)    { Server.new }
 
-  subject(:app) {
-    Server.new
-  }
-
-  after do
-    File.delete(path)
-  end
+  after { File.delete(path) }
 
   describe "resize" do
     let(:path) { "#{IMAGES_PATH}#{value}-#{filename}" }
