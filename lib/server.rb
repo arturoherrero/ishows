@@ -1,11 +1,11 @@
-require "sinatra/base"
 require "mini_magick"
+require "sinatra/base"
 
 IMAGES_PATH = "images/"
 
 class Server < Sinatra::Base
   # Resize an image at the given URL.
-  # http://server.com/width/X/url
+  # http://localhost:3000/width/X/url
   get "/width/:value/*/?" do |value, url|
     process_image(value, url) do |image|
       resize(image, value)
@@ -13,10 +13,10 @@ class Server < Sinatra::Base
   end
 
   # Resize and crop an image at the given URL.
-  # http://server.com/crop/XxY/url
+  # http://localhost:3000/crop/XxY/url
   get "/crop/:dimensions/*/?" do |dimensions, url|
     process_image(dimensions, url) do |image|
-      resize(image, dimensions + "^")
+      resize(image, "#{dimensions}^")
       crop(image, dimensions)
     end
   end
@@ -46,7 +46,7 @@ class Server < Sinatra::Base
   # WORKAROUND: Sinatra match the route parameter with only one slash http:/
   def open(url)
     url["http:/"] = "http://"
-    minimagick.open(url)
+    MiniMagick::Image.open(url)
   end
 
   def resize(image, dimensions)
@@ -55,7 +55,7 @@ class Server < Sinatra::Base
 
   # WORKAROUND: http://stackoverflow.com/q/8418973/462015
   def crop(image, dimensions)
-    image.crop(dimensions + "+0+0")
+    image.crop("#{dimensions}+0+0")
   end
 
   def write(image, path)
@@ -68,9 +68,5 @@ class Server < Sinatra::Base
       :type => "image/jpeg",
       :disposition => "inline"
     )
-  end
-
-  def minimagick
-    MiniMagick::Image
   end
 end
