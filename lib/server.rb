@@ -55,7 +55,11 @@ class Server < Sinatra::Base
 
   # WORKAROUND: http://stackoverflow.com/q/8418973/462015
   def crop(image, dimensions)
-    image.crop("#{dimensions}+0+0")
+    image.crop("#{dimensions}#{offset(image, dimensions)}")
+  end
+
+  def offset(image, dimensions)
+    "+0+#{(image[:height] - dimensions.split("x").last.to_i) / 3}"
   end
 
   def write(image, path)
