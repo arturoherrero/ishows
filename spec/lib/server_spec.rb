@@ -11,7 +11,7 @@ describe Server do
   let(:image)      { MiniMagick::Image.open(path) }
   subject(:app)    { Server.new }
 
-  after { File.delete(path) }
+  after(:all) { FileUtils.rm_rf(Dir.glob("#{IMAGES_PATH}/*")) }
 
   describe "resize" do
     let(:path) { "#{IMAGES_PATH}#{value}-#{filename}" }
@@ -33,6 +33,16 @@ describe Server do
       expect(image[:width]).to eq 305
       expect(image[:height]).to eq 105
       expect(last_response).to be_ok
+    end
+
+    context "https" do
+      let(:url)  { "https://avatars0.githubusercontent.com/u/324832" }
+
+      it "crops an image" do
+        get "/crop/#{dimensions}/#{url}"
+
+        expect(last_response).to be_ok
+      end
     end
   end
 end

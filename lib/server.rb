@@ -45,7 +45,7 @@ class Server < Sinatra::Base
 
   # WORKAROUND: Sinatra match the route parameter with only one slash http:/
   def open(url)
-    url["http:/"] = "http://"
+    url[":/"] = "://"
     MiniMagick::Image.open(url)
   end
 
