@@ -59,7 +59,7 @@ class Server < Sinatra::Base
   end
 
   def offset(image, dimensions)
-    "+0+#{(image[:height] - dimensions.split("x").last.to_i) / 4}"
+    "+0+0"
   end
 
   def write(image, path)
