@@ -25,13 +25,13 @@ Using Shotgun with an automatic reloading version:
 
 Resize an image from a URL with a specific width:
 
-    http://localhost:3000/width/305/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg'
+    http://localhost:3000/width/305/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg
 
 ### Crop an image
 
 Crop an image from a URL with a specific dimensions:
 
-    http://localhost:3000/crop/305x105/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg'
+    http://localhost:3000/crop/305x105/http://www.thetvdb.com/banners/fanart/original/81189-43.jpg
 
 
 ## Deployment
