@@ -24,8 +24,6 @@ class Server < Sinatra::Base
   private
 
   def process_image(dimensions, url, &block)
-    filename = create_filename(dimensions, url)
-
     unless File.exists?(filename)
       image = open(url)
       block.call(image)
@@ -35,12 +33,12 @@ class Server < Sinatra::Base
     sendfile(filename)
   end
 
-  def create_filename(dimensions, url)
-    "#{IMAGES_PATH}#{dimensions}-#{key(url)}"
+  def filename
+    @filename ||= "#{IMAGES_PATH}#{key(request.path)}"
   end
 
-  def key(url)
-    Digest::SHA1.hexdigest(url)
+  def key(path)
+    Digest::SHA1.hexdigest(path)
   end
 
   # WORKAROUND: Sinatra match the route parameter with only one slash http:/

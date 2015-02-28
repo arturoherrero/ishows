@@ -8,14 +8,12 @@ describe Server do
   let(:filename)   { "bb3c1ebe443d97df948f77c078075a51b1b6c143" }
   let(:value)      { "305" }
   let(:dimensions) { "305x105" }
-  let(:image)      { MiniMagick::Image.open(path) }
+  let(:image)      { MiniMagick::Image.open(Dir["#{IMAGES_PATH}/*"].first) }
   subject(:app)    { Server.new }
 
   after(:all) { FileUtils.rm_rf(Dir.glob("#{IMAGES_PATH}/*")) }
 
   describe "resize" do
-    let(:path) { "#{IMAGES_PATH}#{value}-#{filename}" }
-
     it "resizes an image" do
       get "/width/#{value}/#{url}"
 
@@ -25,8 +23,6 @@ describe Server do
   end
 
   describe "crop" do
-    let(:path) { "#{IMAGES_PATH}#{dimensions}-#{filename}" }
-
     it "crops an image" do
       get "/crop/#{dimensions}/#{url}"
 
