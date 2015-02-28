@@ -1,7 +1,7 @@
 # iShows
 
 iShows is a [Sinatra] application to serve images with a determinate size.
-iShows use [MiniMagick] library to convert, edit or compose bitmap images.
+iShows uses [MiniMagick] library to convert, edit or compose bitmap images.
 
 
 ## Instalation
@@ -36,7 +36,7 @@ Crop an image from a URL with a specific dimensions:
 
 ## Deployment
 
-Using [Phusion Passenger] application server for Apache to deploy the Sinatra app.
+iShows uses [Phusion Passenger] application server for Apache to deploy the Sinatra app.
 
 
 [Sinatra]: http://www.sinatrarb.com/
