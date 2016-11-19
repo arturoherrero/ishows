@@ -53,10 +53,10 @@ class Server < Sinatra::Base
 
   # WORKAROUND: http://stackoverflow.com/q/8418973/462015
   def crop(image, dimensions)
-    image.crop("#{dimensions}#{offset(image, dimensions)}")
+    image.crop("#{dimensions}#{offset}")
   end
 
-  def offset(image, dimensions)
+  def offset
     "+0+0"
   end
 
@@ -65,10 +65,9 @@ class Server < Sinatra::Base
   end
 
   def sendfile(filename)
-    send_file(
-      filename,
-      :type => "image/jpeg",
-      :disposition => "inline"
+    send_file(filename,
+      type: "image/jpeg",
+      disposition: "inline"
     )
   end
 end
