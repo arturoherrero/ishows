@@ -5,7 +5,7 @@ RSpec.describe Server do
   let(:filename)   { "bb3c1ebe443d97df948f77c078075a51b1b6c143" }
   let(:value)      { "305" }
   let(:dimensions) { "305x105" }
-  let(:image)      { MiniMagick::Image.open(Dir["#{IMAGES_PATH}/*"].first) }
+  let(:image)      { MiniMagick::Image.open(Dir["#{IMAGES_PATH}/*"].first) rescue nil }
   subject(:app)    { Server.new }
 
   after(:all) { FileUtils.rm_rf(Dir.glob("#{IMAGES_PATH}/*")) }
@@ -55,6 +55,20 @@ RSpec.describe Server do
         get "/crop/#{dimensions}/#{url}"
         expect(last_response).to be_ok
       end
+    end
+  end
+
+  context "walter.trakt.us" do
+    let(:url) { "https://walter.trakt.us/images/movies/000/005/411/posters/medium/b6360618f2.jpg" }
+
+    it "returns a valid response" do
+      get "/width/#{value}/#{url}"
+      expect(last_response).to be_ok
+    end
+
+    it "doesn't return the image" do
+      get "/width/#{value}/#{url}"
+      expect(image).to be_nil
     end
   end
 end

@@ -24,13 +24,15 @@ class Server < Sinatra::Base
   private
 
   def process_image(dimensions, url, &block)
-    unless File.exists?(filename)
-      image = open(url)
-      block.call(image)
-      write(image, filename)
-    end
+    unless url.include?("walter.trakt.us")
+      unless File.exists?(filename)
+        image = open(url)
+        block.call(image)
+        write(image, filename)
+      end
 
-    sendfile(filename)
+      sendfile(filename)
+    end
   end
 
   def filename
