@@ -13,30 +13,47 @@ RSpec.describe Server do
   describe "GET /resize" do
     it "resizes the image with the right width" do
       get "/width/#{value}/#{url}"
-
       expect(image[:width]).to eq(305)
+    end
+
+    it "returns a valid response" do
+      get "/width/#{value}/#{url}"
       expect(last_response).to be_ok
     end
   end
 
   describe "GET /crop" do
-    it "crops the image with the right dimensions" do
+    it "crops the image with the right width" do
       get "/crop/#{dimensions}/#{url}"
-
-      expect(image[:width]).to  eq(305)
-      expect(image[:height]).to eq(105)
-      expect(last_response).to  be_ok
+      expect(image[:width]).to eq(305)
     end
 
-    context "for a https image" do
-      let(:url)  { "https://www.thetvdb.com/banners/fanart/original/81189-43.jpg" }
+    it "crops the image with the right height" do
+      get "/crop/#{dimensions}/#{url}"
+      expect(image[:height]).to eq(105)
+    end
 
-      it "crops the image with the right dimensions" do
+    it "returns a valid response" do
+      get "/crop/#{dimensions}/#{url}"
+      expect(last_response).to be_ok
+    end
+
+    context "with an https request" do
+      let(:url) { "https://www.thetvdb.com/banners/fanart/original/81189-43.jpg" }
+
+      it "crops the image with the right width" do
         get "/crop/#{dimensions}/#{url}"
+        expect(image[:width]).to eq(305)
+      end
 
-        expect(image[:width]).to  eq(305)
+      it "crops the image with the right height" do
+        get "/crop/#{dimensions}/#{url}"
         expect(image[:height]).to eq(105)
-        expect(last_response).to  be_ok
+      end
+
+      it "returns a valid response" do
+        get "/crop/#{dimensions}/#{url}"
+        expect(last_response).to be_ok
       end
     end
   end
