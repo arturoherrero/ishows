@@ -1,12 +1,12 @@
 require "server"
 
 RSpec.describe Server do
+  subject(:app)    { Server.new }
   let(:url)        { "http://www.thetvdb.com/banners/fanart/original/81189-43.jpg" }
   let(:filename)   { "bb3c1ebe443d97df948f77c078075a51b1b6c143" }
   let(:value)      { "305" }
   let(:dimensions) { "305x105" }
-  let(:image)      { MiniMagick::Image.open(Dir["#{IMAGES_PATH}/*"].first) rescue nil }
-  subject(:app)    { Server.new }
+  let(:image)      { MiniMagick::Image.open(Dir["#{IMAGES_PATH}/*"].first) }
 
   after(:all) { FileUtils.rm_rf(Dir.glob("#{IMAGES_PATH}/*")) }
 
@@ -66,9 +66,9 @@ RSpec.describe Server do
       expect(last_response).to be_ok
     end
 
-    it "doesn't return the image" do
+    it "does not request the url" do
+      expect(MiniMagick::Image).to_not receive(:open)
       get "/width/#{value}/#{url}"
-      expect(image).to be_nil
     end
   end
 end
