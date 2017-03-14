@@ -3,6 +3,10 @@ require "sinatra/base"
 
 IMAGES_PATH = "images/"
 
+MiniMagick.configure do |config|
+  config.timeout = 5
+end
+
 class Server < Sinatra::Base
   # Resize an image at the given URL.
   # http://localhost:3000/width/X/url
