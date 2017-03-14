@@ -1,3 +1,4 @@
+require "logger"
 require "mini_magick"
 require "sinatra/base"
 
@@ -37,6 +38,8 @@ class Server < Sinatra::Base
 
       sendfile(filename)
     end
+  rescue OpenURI::HTTPError => e
+    logger.info(url)
   end
 
   def filename
@@ -75,5 +78,9 @@ class Server < Sinatra::Base
       type: "image/jpeg",
       disposition: "inline"
     )
+  end
+
+  def logger
+    @logger ||= Logger.new("/home/apps/ishows/tmp/bad-urls.txt")
   end
 end
