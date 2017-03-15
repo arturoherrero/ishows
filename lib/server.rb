@@ -3,6 +3,7 @@ require "mini_magick"
 require "sinatra/base"
 
 IMAGES_PATH = "images/"
+URL_BLACK_FILE = "tmp/bad-urls.txt"
 
 MiniMagick.configure do |config|
   config.timeout = 5
@@ -29,7 +30,9 @@ class Server < Sinatra::Base
   private
 
   def process_image(dimensions, url, &block)
-    unless url.include?("walter.trakt.us")
+    url[":/"] = "://"  # WORKAROUND: Sinatra match the route parameter with only one slash http:/
+
+    if !url.include?("walter.trakt.us") && !File.foreach(URL_BLACK_FILE).any? { |line|line.include?(url) }
       unless File.exists?(filename)
         image = open(url)
         block.call(image)
@@ -50,9 +53,7 @@ class Server < Sinatra::Base
     Digest::SHA1.hexdigest(path)
   end
 
-  # WORKAROUND: Sinatra match the route parameter with only one slash http:/
   def open(url)
-    url[":/"] = "://"
     MiniMagick::Image.open(url)
   end
 
@@ -81,6 +82,6 @@ class Server < Sinatra::Base
   end
 
   def logger
-    @logger ||= Logger.new("/home/apps/ishows/tmp/bad-urls.txt")
+    @logger ||= Logger.new(URL_BLACK_FILE)
   end
 end
