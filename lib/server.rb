@@ -5,10 +5,6 @@ require "sinatra/base"
 IMAGES_PATH = "images/"
 URL_BLACK_FILE = "tmp/bad-urls.txt"
 
-MiniMagick.configure do |config|
-  config.timeout = 5
-end
-
 class Server < Sinatra::Base
   # Resize an image at the given URL.
   # http://localhost:3000/width/X/url
@@ -32,7 +28,7 @@ class Server < Sinatra::Base
   def process_image(dimensions, url, &block)
     url[":/"] = "://"  # WORKAROUND: Sinatra match the route parameter with only one slash http:/
 
-    if !url.include?("walter.trakt.us") && !File.foreach(URL_BLACK_FILE).any? { |line|line.include?(url) }
+    if !url.include?("walter.trakt.us") && !File.foreach(URL_BLACK_FILE).any? { |line| line.include?(url) }
       unless File.exists?(filename)
         image = open(url)
         block.call(image)
@@ -41,7 +37,7 @@ class Server < Sinatra::Base
 
       sendfile(filename)
     end
-  rescue OpenURI::HTTPError => e
+  rescue Exception => e
     logger.info(url)
   end
 
