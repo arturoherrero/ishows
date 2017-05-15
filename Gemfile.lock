@@ -25,7 +25,7 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    lumberjack (1.0.11)
+    lumberjack (1.0.12)
     method_source (0.8.2)
     mini_magick (4.7.0)
     mustermann (1.0.0)
@@ -37,7 +37,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    rack (2.0.2)
+    rack (2.0.3)
     rack-protection (2.0.0)
       rack
     rack-test (0.6.3)
@@ -89,4 +89,4 @@ DEPENDENCIES
   thin
 
 BUNDLED WITH
-   1.13.7
+   1.14.6
