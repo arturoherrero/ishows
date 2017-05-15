@@ -25,13 +25,13 @@ class Server < Sinatra::Base
 
   private
 
-  def process_image(dimensions, url, &block)
+  def process_image(dimensions, url)
     url[":/"] = "://"  # WORKAROUND: Sinatra match the route parameter with only one slash http:/
 
     if !url.include?("walter.trakt.us") && !File.foreach(URL_BLACK_FILE).any? { |line| line.include?(url) }
       unless File.exists?(filename)
         image = open(url)
-        block.call(image)
+        yield(image)
         write(image, filename)
       end
 
