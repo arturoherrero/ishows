@@ -38,7 +38,7 @@ class Server < Sinatra::Base
       sendfile(filename)
     end
   rescue Exception => e
-    logger.info(url)
+    logger.error(url)
   end
 
   def filename
@@ -78,6 +78,6 @@ class Server < Sinatra::Base
   end
 
   def logger
-    @logger ||= Logger.new(URL_BLACK_FILE)
+    Logger.new(URL_BLACK_FILE)
   end
 end
