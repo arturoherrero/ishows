@@ -57,18 +57,4 @@ RSpec.describe Server do
       end
     end
   end
-
-  context "walter.trakt.us" do
-    let(:url) { "https://walter.trakt.us/images/movies/000/005/411/posters/medium/b6360618f2.jpg" }
-
-    it "returns a valid response" do
-      get "/width/#{value}/#{url}"
-      expect(last_response).to be_ok
-    end
-
-    it "does not request the url" do
-      expect(MiniMagick::Image).to_not receive(:open)
-      get "/width/#{value}/#{url}"
-    end
-  end
 end
