@@ -6,16 +6,14 @@ IMAGES_PATH = "images/"
 BAD_URLS_FILE = "tmp/bad-urls.txt"
 
 class Server < Sinatra::Base
-  # Resize an image at the given URL.
-  # http://localhost:3000/width/X/url
+  # Resize an image for a given URL: http://localhost:3000/width/X/url
   get "/width/:value/*/?" do |value, url|
     process_image(value, url) do |image|
       resize(image, value)
     end
   end
 
-  # Resize and crop an image at the given URL.
-  # http://localhost:3000/crop/XxY/url
+  # Resize and crop an image for a given URL: http://localhost:3000/crop/XxY/url
   get "/crop/:dimensions/*/?" do |dimensions, url|
     process_image(dimensions, url) do |image|
       resize(image, "#{dimensions}^")
