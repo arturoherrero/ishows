@@ -35,7 +35,7 @@ class Server < Sinatra::Base
 
       send_file(filename, type: "image/jpeg", disposition: "inline")
     end
-  rescue StandardError => e
+  rescue StandardError
     Logger.new(BAD_URLS_FILE).error(url)
   end
 
