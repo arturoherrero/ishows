@@ -3,7 +3,7 @@ require "mini_magick"
 require "sinatra/base"
 
 IMAGES_PATH = "images/"
-URL_BLACK_FILE = "tmp/bad-urls.txt"
+BAD_URLS_FILE = "tmp/bad-urls.txt"
 
 class Server < Sinatra::Base
   # Resize an image at the given URL.
@@ -28,7 +28,7 @@ class Server < Sinatra::Base
   def process_image(dimensions, url)
     url[":/"] = "://"  # WORKAROUND: Sinatra match the route parameter with only one slash http:/
 
-    if !File.foreach(URL_BLACK_FILE).any? { |line| line.include?(url) }
+    if !File.foreach(BAD_URLS_FILE).any? { |line| line.include?(url) }
       unless File.exists?(filename)
         image = open(url)
         yield(image)
@@ -74,6 +74,6 @@ class Server < Sinatra::Base
   end
 
   def logger
-    Logger.new(URL_BLACK_FILE)
+    Logger.new(BAD_URLS_FILE)
   end
 end
