@@ -27,7 +27,7 @@ class Server < Sinatra::Base
     url[":/"] = "://"  # WORKAROUND: Sinatra match the route parameter with only one slash http:/
 
     unless File.foreach(BAD_URLS_FILE).any? { |line| line.include?(url) }
-      unless File.exists?(filename)
+      unless File.exist?(filename)
         image = MiniMagick::Image.open(url)
         yield(image)
         image.write(filename)
