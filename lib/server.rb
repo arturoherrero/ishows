@@ -28,27 +28,19 @@ class Server < Sinatra::Base
 
     if !File.foreach(BAD_URLS_FILE).any? { |line| line.include?(url) }
       unless File.exists?(filename)
-        image = open(url)
+        image = MiniMagick::Image.open(url)
         yield(image)
-        write(image, filename)
+        image.write(filename)
       end
 
-      sendfile(filename)
+      send_file(filename, type: "image/jpeg", disposition: "inline")
     end
   rescue Exception => e
-    logger.error(url)
+    Logger.new(BAD_URLS_FILE).error(url)
   end
 
   def filename
-    @filename ||= "#{IMAGES_PATH}#{key(request.path)}"
-  end
-
-  def key(path)
-    Digest::SHA1.hexdigest(path)
-  end
-
-  def open(url)
-    MiniMagick::Image.open(url)
+    @filename ||= "#{IMAGES_PATH}#{Digest::SHA1.hexdigest(request.path)}"
   end
 
   def resize(image, dimensions)
@@ -58,20 +50,5 @@ class Server < Sinatra::Base
   # WORKAROUND: http://stackoverflow.com/q/8418973/462015
   def crop(image, dimensions)
     image.crop("#{dimensions}+0+0")
-  end
-
-  def write(image, path)
-    image.write(path)
-  end
-
-  def sendfile(filename)
-    send_file(filename,
-      type: "image/jpeg",
-      disposition: "inline"
-    )
-  end
-
-  def logger
-    Logger.new(BAD_URLS_FILE)
   end
 end
