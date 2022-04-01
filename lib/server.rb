@@ -26,7 +26,7 @@ class Server < Sinatra::Base
   def process_image(dimensions, url)
     url[":/"] = "://"  # WORKAROUND: Sinatra match the route parameter with only one slash http:/
 
-    if !File.foreach(BAD_URLS_FILE).any? { |line| line.include?(url) }
+    unless File.foreach(BAD_URLS_FILE).any? { |line| line.include?(url) }
       unless File.exists?(filename)
         image = MiniMagick::Image.open(url)
         yield(image)
